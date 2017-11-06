@@ -1,9 +1,14 @@
-apib-to-postman:
+apib-to-postman: blueprint/drafter.go main.go
 	@go build -o apib-to-postman
 
 clean:
 	rm -f apib-to-postman
+	rm -f blueprint/drafter.go
 	rm -rf blueprint/ext
+
+blueprint/drafter.go: blueprint/ext/drafter/bin/drafter
+	@go get github.com/mjibson/esc
+	go generate blueprint/parser.go
 
 blueprint/ext/drafter/bin/drafter:
 	mkdir -p blueprint/ext

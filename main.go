@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+
+	"github.com/saifulwebid/apib-to-postman/blueprint"
 )
 
 func main() {
@@ -39,7 +41,13 @@ func main() {
 		defer outFile.Close()
 	}
 
-	_, err = outFile.Write(inFileByte)
+	bp, err := blueprint.GetStructure(inFileByte)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "error parsing blueprint:", err)
+		os.Exit(1)
+	}
+
+	_, err = outFile.WriteString(bp.Title)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error on write output:", err)
 		os.Exit(1)

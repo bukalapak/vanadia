@@ -1,6 +1,33 @@
 {
 	"comment": "",
 	"ignore": "test",
-	"package": [],
+	"package": [
+		{
+			"checksumSHA1": "Q3qvQq1Vgc/7WWZgZwvXCM2fx14=",
+			"path": "github.com/bukalapak/snowboard/api",
+			"revision": "017112eded9fd89c51220bdf2ade40619e4ae3c6",
+			"revisionTime": "2017-10-04T08:24:16Z"
+		},
+		{
+			"checksumSHA1": "Ob8bY5Aj+Wt+Fxm/Uc/V5RLWFEU=",
+			"path": "github.com/bukalapak/snowboard/parser",
+			"revision": "017112eded9fd89c51220bdf2ade40619e4ae3c6",
+			"revisionTime": "2017-10-04T08:24:16Z"
+		},
+		{
+			"checksumSHA1": "66lykxpWgSmQodnhkADqn6tnroQ=",
+			"origin": "github.com/bukalapak/snowboard/vendor/github.com/imdario/mergo",
+			"path": "github.com/imdario/mergo",
+			"revision": "017112eded9fd89c51220bdf2ade40619e4ae3c6",
+			"revisionTime": "2017-10-04T08:24:16Z"
+		},
+		{
+			"checksumSHA1": "rJab1YdNhQooDiBWNnt7TLWPyBU=",
+			"origin": "github.com/bukalapak/snowboard/vendor/github.com/pkg/errors",
+			"path": "github.com/pkg/errors",
+			"revision": "017112eded9fd89c51220bdf2ade40619e4ae3c6",
+			"revisionTime": "2017-10-04T08:24:16Z"
+		}
+	],
 	"rootPath": "github.com/saifulwebid/apib-to-postman"
 }

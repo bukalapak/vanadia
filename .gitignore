@@ -18,3 +18,4 @@ apib-to-postman
 
 # Drafter
 blueprint/ext
+blueprint/drafter.go
