@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/saifulwebid/apib-to-postman/blueprint"
+	"github.com/saifulwebid/apib-to-postman/postman"
 )
 
 func main() {
@@ -47,7 +48,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	_, err = outFile.WriteString(bp.Title)
+	collection, err := postman.CreateCollection(bp)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "error creating collection:", err)
+		os.Exit(1)
+	}
+
+	_, err = outFile.Write(collection)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error on write output:", err)
 		os.Exit(1)
