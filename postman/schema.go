@@ -27,10 +27,16 @@ type Request struct {
 	Url    string   `json:"url,omitempty"`
 	Method string   `json:"method,omitempty"`
 	Header []Header `json:"header,omitempty"`
+	Body   Body     `json:"body,omitempty"`
 }
 
 type Header struct {
 	Key         string `json:"key"`
 	Value       string `json:"value"`
 	Description string `json:"description,omitempty"`
+}
+
+type Body struct {
+	Mode string `json:"mode,omitempty"`
+	Raw  string `json:"raw,omitempty"`
 }

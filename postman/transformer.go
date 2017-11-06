@@ -49,11 +49,20 @@ func folderFromResource(rsc *api.Resource) Folder {
 }
 
 func itemFromTransition(tr *api.Transition) Item {
-	return Item{
+	item := Item{
 		Name: tr.Title,
 		Request: Request{
 			Url:    tr.URL,
 			Method: tr.Method,
 		},
 	}
+
+	if tr.Transactions[0].Request.Body.Body != "" {
+		item.Request.Body = Body{
+			Mode: "raw",
+			Raw:  tr.Transactions[0].Request.Body.Body,
+		}
+	}
+
+	return item
 }
