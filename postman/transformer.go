@@ -57,6 +57,17 @@ func itemFromTransition(tr *api.Transition) Item {
 		},
 	}
 
+	headers := []Header{}
+	for _, header := range tr.Transactions[0].Request.Headers {
+		headers = append(headers, Header{
+			Key:   header.Key,
+			Value: header.Value,
+		})
+	}
+	if len(headers) > 0 {
+		item.Request.Header = headers
+	}
+
 	if tr.Transactions[0].Request.Body.Body != "" {
 		item.Request.Body = Body{
 			Mode: "raw",
