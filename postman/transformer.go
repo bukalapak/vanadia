@@ -35,6 +35,25 @@ func HostToVariable(c *Collection, n int) {
 	}
 }
 
+func AuthorizationTokenToVariable(c *Collection) {
+	items := getItemsFromCollection(c)
+
+	for i := range items {
+		for j := range items[i].Request.Header {
+			header := items[i].Request.Header[j]
+
+			if strings.ToLower(header.Key) != "authorization" {
+				continue
+			}
+
+			values := strings.Split(header.Value, " ")
+			values[len(values)-1] = "{{access_token}}"
+
+			items[i].Request.Header[j].Value = strings.Join(values, " ")
+		}
+	}
+}
+
 func getItemsFromCollection(c *Collection) []*Item {
 	items := make([]*Item, 0)
 

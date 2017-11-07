@@ -57,6 +57,7 @@ func main() {
 
 	postman.SchemeToVariable(&collection)
 	postman.HostToVariable(&collection, 2)
+	postman.AuthorizationTokenToVariable(&collection)
 
 	json, err := json.Marshal(collection)
 	if err != nil {
