@@ -56,6 +56,7 @@ func main() {
 	}
 
 	postman.SchemeToVariable(&collection)
+	postman.HostToVariable(&collection, 2)
 
 	json, err := json.Marshal(collection)
 	if err != nil {
