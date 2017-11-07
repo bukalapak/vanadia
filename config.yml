@@ -1,0 +1,6 @@
+SchemeToEnv: true
+
+HostToEnv:
+  segments: 2
+
+AuthTokenToEnv: true

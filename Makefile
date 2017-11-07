@@ -1,4 +1,4 @@
-apib-to-postman: main.go blueprint/* postman/*
+apib-to-postman: main.go blueprint/* postman/* config/*
 	@go build -o apib-to-postman
 
 clean:

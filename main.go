@@ -8,13 +8,15 @@ import (
 	"os"
 
 	"github.com/saifulwebid/apib-to-postman/blueprint"
+	"github.com/saifulwebid/apib-to-postman/config"
 	"github.com/saifulwebid/apib-to-postman/postman"
 )
 
 func main() {
 	var (
-		inFileName  = flag.String("input", "", "Location of .apib file as input.")
-		outFileName = flag.String("output", "", "Location of Postman file.")
+		inFileName     = flag.String("input", "", "Location of .apib file as input.")
+		outFileName    = flag.String("output", "", "Location of Postman file.")
+		configFileName = flag.String("config", "config.yml", "Location of config.yml.")
 
 		inFileByte []byte
 		outFile    *os.File
@@ -43,6 +45,12 @@ func main() {
 		defer outFile.Close()
 	}
 
+	cfg, err := config.FromFile(*configFileName)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "error reading config:", err)
+		os.Exit(1)
+	}
+
 	bp, err := blueprint.GetStructure(inFileByte)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error parsing blueprint:", err)
@@ -55,9 +63,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	postman.SchemeToEnv(&collection)
-	postman.HostToEnv(&collection, 2)
-	postman.AuthTokenToEnv(&collection)
+	if cfg.SchemeToEnv {
+		postman.SchemeToEnv(&collection)
+	}
+	if cfg.HostToEnv.Segments > 0 {
+		postman.HostToEnv(&collection, cfg.HostToEnv.Segments)
+	}
+	if cfg.AuthTokenToEnv {
+		postman.AuthTokenToEnv(&collection)
+	}
 
 	json, err := json.MarshalIndent(collection, "", "\t")
 	if err != nil {
