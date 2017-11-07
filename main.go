@@ -59,7 +59,7 @@ func main() {
 	postman.HostToEnv(&collection, 2)
 	postman.AuthTokenToEnv(&collection)
 
-	json, err := json.Marshal(collection)
+	json, err := json.MarshalIndent(collection, "", "\t")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error exporting to JSON:", err)
 		os.Exit(1)
