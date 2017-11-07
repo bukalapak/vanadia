@@ -1,13 +1,22 @@
 package postman
 
 import (
+	"net/url"
+	"regexp"
+	"strings"
+
 	"github.com/bukalapak/snowboard/api"
 )
 
-func CreateCollection(bp *api.API) Collection {
+func CreateCollection(bp *api.API) (Collection, error) {
 	folders := []*Item{}
 	for _, resourceGroup := range bp.ResourceGroups {
-		folders = append(folders, itemFromResourceGroup(&resourceGroup))
+		item, err := itemFromResourceGroup(&resourceGroup)
+		if err != nil {
+			return Collection{}, err
+		}
+
+		folders = append(folders, item)
 	}
 
 	coll := Collection{
@@ -19,38 +28,53 @@ func CreateCollection(bp *api.API) Collection {
 		Items: folders,
 	}
 
-	return coll
+	return coll, nil
 }
 
-func itemFromResourceGroup(rg *api.ResourceGroup) *Item {
+func itemFromResourceGroup(rg *api.ResourceGroup) (*Item, error) {
 	items := []*Item{}
 	for _, resource := range rg.Resources {
-		items = append(items, itemFromResource(resource))
+		item, err := itemFromResource(resource)
+		if err != nil {
+			return nil, err
+		}
+
+		items = append(items, item)
 	}
 
 	return &Item{
 		Name:  rg.Title,
 		Items: items,
-	}
+	}, nil
 }
 
-func itemFromResource(rsc *api.Resource) *Item {
+func itemFromResource(rsc *api.Resource) (*Item, error) {
 	items := []*Item{}
 	for _, transition := range rsc.Transitions {
-		items = append(items, itemFromTransition(transition))
+		item, err := itemFromTransition(transition)
+		if err != nil {
+			return nil, err
+		}
+
+		items = append(items, item)
 	}
 
 	return &Item{
 		Name:  rsc.Title,
 		Items: items,
-	}
+	}, nil
 }
 
-func itemFromTransition(tr *api.Transition) *Item {
+func itemFromTransition(tr *api.Transition) (*Item, error) {
+	url, err := formalizeUrl(tr.URL)
+	if err != nil {
+		return nil, err
+	}
+
 	item := &Item{
 		Name: tr.Title,
 		Request: Request{
-			Url:    tr.URL,
+			Url:    url,
 			Method: tr.Method,
 		},
 	}
@@ -73,5 +97,54 @@ func itemFromTransition(tr *api.Transition) *Item {
 		}
 	}
 
-	return item
+	return item, nil
+}
+
+func formalizeUrl(urlString string) (Url, error) {
+	var queries []QueryParam
+	var variables []Variable
+
+	// Get query parameters
+	re := regexp.MustCompile(`\{\?([a-z_,-]+)\}$`)
+	allMatch := re.FindAllStringSubmatch(urlString, -1)
+
+	for _, innerMatch := range allMatch {
+		for _, match := range strings.Split(innerMatch[1], `,`) {
+			query := QueryParam{
+				Key: match,
+			}
+			queries = append(queries, query)
+		}
+	}
+
+	urlString = re.ReplaceAllString(urlString, "")
+
+	// Get variables
+	re = regexp.MustCompile(`\{([a-z_-]+)\}`)
+	allMatch = re.FindAllStringSubmatch(urlString, -1)
+
+	for _, innerMatch := range allMatch {
+		for _, match := range strings.Split(innerMatch[1], `,`) {
+			variable := Variable{
+				Key: match,
+			}
+			variables = append(variables, variable)
+		}
+	}
+
+	urlString = re.ReplaceAllString(urlString, ":$1")
+
+	// Get scheme, host, and path
+	urlObject, err := url.ParseRequestURI(urlString)
+	if err != nil {
+		return Url{}, err
+	}
+
+	return Url{
+		Protocol: urlObject.Scheme,
+		Host:     urlObject.Host,
+		Path:     urlObject.Path,
+		Query:    queries,
+		Variable: variables,
+	}, nil
 }

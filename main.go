@@ -49,7 +49,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	collection := postman.CreateCollection(bp)
+	collection, err := postman.CreateCollection(bp)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "error creating collection:", err)
+		os.Exit(1)
+	}
 
 	json, err := json.Marshal(collection)
 	if err != nil {

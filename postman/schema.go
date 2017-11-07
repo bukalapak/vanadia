@@ -21,10 +21,18 @@ type Item struct {
 }
 
 type Request struct {
-	Url    string   `json:"url,omitempty"`
+	Url    Url      `json:"url,omitempty"`
 	Method string   `json:"method,omitempty"`
 	Header []Header `json:"header,omitempty"`
 	Body   Body     `json:"body,omitempty"`
+}
+
+type Url struct {
+	Protocol string       `json:"protocol"`
+	Host     string       `json:"host"`
+	Path     string       `json:"path"`
+	Query    []QueryParam `json:"query,omitempty"`
+	Variable []Variable   `json:"variable,omitempty"`
 }
 
 type Header struct {
@@ -36,4 +44,16 @@ type Header struct {
 type Body struct {
 	Mode string `json:"mode,omitempty"`
 	Raw  string `json:"raw,omitempty"`
+}
+
+type QueryParam struct {
+	Key         string `json:"key,omitempty"`
+	Value       string `json:"value,omitempty"`
+	Description string `json:"description,omitempty"`
+}
+
+type Variable struct {
+	Key         string `json:"key"`
+	Value       string `json:"value,omitempty"`
+	Description string `json:"description,omitempty"`
 }
