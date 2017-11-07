@@ -6,6 +6,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+var DefaultConfig = Config{}
+
 type Config struct {
 	SchemeToEnv bool `yaml:"SchemeToEnv,omitempty"`
 	HostToEnv   struct {

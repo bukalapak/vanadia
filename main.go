@@ -12,11 +12,15 @@ import (
 	"github.com/saifulwebid/apib-to-postman/postman"
 )
 
+const (
+	defaultConfigFileName = "config.yml"
+)
+
 func main() {
 	var (
 		inFileName     = flag.String("input", "", "Location of .apib file as input.")
 		outFileName    = flag.String("output", "", "Location of Postman file.")
-		configFileName = flag.String("config", "config.yml", "Location of config.yml.")
+		configFileName = flag.String("config", defaultConfigFileName, "Location of config.yml.")
 
 		inFileByte []byte
 		outFile    *os.File
@@ -47,8 +51,22 @@ func main() {
 
 	cfg, err := config.FromFile(*configFileName)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "error reading config:", err)
-		os.Exit(1)
+		func() {
+			switch err.(type) {
+			case *os.PathError:
+				if *configFileName == defaultConfigFileName {
+					// If no default config file is defined, then we just
+					// use default Config value
+					cfg = config.DefaultConfig
+					return
+				} else {
+					fmt.Fprintln(os.Stderr, "error reading config:", err)
+					os.Exit(1)
+				}
+			}
+			fmt.Fprintln(os.Stderr, "error reading config:", err)
+			os.Exit(1)
+		}()
 	}
 
 	bp, err := blueprint.GetStructure(inFileByte)
