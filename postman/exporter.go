@@ -23,7 +23,7 @@ func CreateCollection(bp *api.API) Collection {
 }
 
 func folderFromResourceGroup(rg *api.ResourceGroup) Folder {
-	items := make([]Folder, 0)
+	items := make([]interface{}, 0)
 	for _, resource := range rg.Resources {
 		items = append(items, folderFromResource(resource))
 	}
@@ -35,7 +35,7 @@ func folderFromResourceGroup(rg *api.ResourceGroup) Folder {
 }
 
 func folderFromResource(rsc *api.Resource) Folder {
-	items := make([]Item, 0)
+	items := make([]interface{}, 0)
 	for _, transition := range rsc.Transitions {
 		items = append(items, itemFromTransition(transition))
 	}

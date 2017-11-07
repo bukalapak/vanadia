@@ -14,8 +14,8 @@ type Information struct {
 }
 
 type Folder struct {
-	Name  string      `json:"name,omitempty"`
-	Items interface{} `json:"item"`
+	Name  string        `json:"name,omitempty"`
+	Items []interface{} `json:"item"`
 }
 
 type Item struct {
