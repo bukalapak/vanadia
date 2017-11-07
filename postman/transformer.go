@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-func SchemeToVariable(c *Collection) {
+func SchemeToEnv(c *Collection) {
 	items := getItemsFromCollection(c)
 
 	for i := range items {
@@ -14,7 +14,7 @@ func SchemeToVariable(c *Collection) {
 	}
 }
 
-func HostToVariable(c *Collection, n int) {
+func HostToEnv(c *Collection, n int) {
 	items := getItemsFromCollection(c)
 
 	for i := range items {
@@ -35,7 +35,7 @@ func HostToVariable(c *Collection, n int) {
 	}
 }
 
-func AuthorizationTokenToVariable(c *Collection) {
+func AuthTokenToEnv(c *Collection) {
 	items := getItemsFromCollection(c)
 
 	for i := range items {

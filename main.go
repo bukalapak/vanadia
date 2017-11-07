@@ -55,9 +55,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	postman.SchemeToVariable(&collection)
-	postman.HostToVariable(&collection, 2)
-	postman.AuthorizationTokenToVariable(&collection)
+	postman.SchemeToEnv(&collection)
+	postman.HostToEnv(&collection, 2)
+	postman.AuthTokenToEnv(&collection)
 
 	json, err := json.Marshal(collection)
 	if err != nil {
