@@ -71,6 +71,8 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 		return nil, err
 	}
 
+	url = explainQueryParams(url, tr)
+
 	item := &Item{
 		Name: tr.Title,
 		Request: Request{
@@ -147,4 +149,29 @@ func formalizeUrl(urlString string) (Url, error) {
 		Query:    queries,
 		Variable: variables,
 	}, nil
+}
+
+func explainQueryParams(u Url, tr *api.Transition) Url {
+	queryMap := make(map[string]QueryParam)
+
+	for _, query := range u.Query {
+		queryMap[query.Key] = query
+	}
+
+	for _, param := range tr.Href.Parameters {
+		if query, found := queryMap[param.Key]; found {
+			query.Value = param.Value
+			query.Description = param.Description
+
+			queryMap[param.Key] = query
+		}
+	}
+
+	querySlice := []QueryParam{}
+	for _, query := range queryMap {
+		querySlice = append(querySlice, query)
+	}
+
+	u.Query = querySlice
+	return u
 }
