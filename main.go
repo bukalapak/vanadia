@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -48,13 +49,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	collection, err := postman.CreateCollection(bp)
+	collection := postman.CreateCollection(bp)
+
+	json, err := json.Marshal(collection)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "error creating collection:", err)
+		fmt.Fprintln(os.Stderr, "error exporting to JSON:", err)
 		os.Exit(1)
 	}
 
-	_, err = outFile.Write(collection)
+	_, err = outFile.Write(json)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error on write output:", err)
 		os.Exit(1)

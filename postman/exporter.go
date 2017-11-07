@@ -1,12 +1,10 @@
 package postman
 
 import (
-	"encoding/json"
-
 	"github.com/bukalapak/snowboard/api"
 )
 
-func CreateCollection(bp *api.API) ([]byte, error) {
+func CreateCollection(bp *api.API) Collection {
 	folders := make([]Folder, 0)
 	for _, resourceGroup := range bp.ResourceGroups {
 		folders = append(folders, folderFromResourceGroup(&resourceGroup))
@@ -21,7 +19,7 @@ func CreateCollection(bp *api.API) ([]byte, error) {
 		Items: folders,
 	}
 
-	return json.Marshal(coll)
+	return coll
 }
 
 func folderFromResourceGroup(rg *api.ResourceGroup) Folder {
