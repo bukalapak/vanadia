@@ -5,9 +5,9 @@ import (
 )
 
 func CreateCollection(bp *api.API) Collection {
-	folders := make([]Folder, 0)
+	folders := []*Item{}
 	for _, resourceGroup := range bp.ResourceGroups {
-		folders = append(folders, folderFromResourceGroup(&resourceGroup))
+		folders = append(folders, itemFromResourceGroup(&resourceGroup))
 	}
 
 	coll := Collection{
@@ -22,32 +22,32 @@ func CreateCollection(bp *api.API) Collection {
 	return coll
 }
 
-func folderFromResourceGroup(rg *api.ResourceGroup) Folder {
-	items := make([]interface{}, 0)
+func itemFromResourceGroup(rg *api.ResourceGroup) *Item {
+	items := []*Item{}
 	for _, resource := range rg.Resources {
-		items = append(items, folderFromResource(resource))
+		items = append(items, itemFromResource(resource))
 	}
 
-	return Folder{
+	return &Item{
 		Name:  rg.Title,
 		Items: items,
 	}
 }
 
-func folderFromResource(rsc *api.Resource) Folder {
-	items := make([]interface{}, 0)
+func itemFromResource(rsc *api.Resource) *Item {
+	items := []*Item{}
 	for _, transition := range rsc.Transitions {
 		items = append(items, itemFromTransition(transition))
 	}
 
-	return Folder{
+	return &Item{
 		Name:  rsc.Title,
 		Items: items,
 	}
 }
 
-func itemFromTransition(tr *api.Transition) Item {
-	item := Item{
+func itemFromTransition(tr *api.Transition) *Item {
+	item := &Item{
 		Name: tr.Title,
 		Request: Request{
 			Url:    tr.URL,

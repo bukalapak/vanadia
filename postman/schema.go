@@ -4,7 +4,7 @@ package postman
 
 type Collection struct {
 	Info  Information `json:"info"`
-	Items []Folder    `json:"item,omitempty"`
+	Items []*Item     `json:"item,omitempty"`
 }
 
 type Information struct {
@@ -13,13 +13,10 @@ type Information struct {
 	Schema    string `json:"schema"`
 }
 
-type Folder struct {
-	Name  string        `json:"name,omitempty"`
-	Items []interface{} `json:"item"`
-}
-
+// Item represents both `Folder` and `Item` in Postman schema.
 type Item struct {
 	Name    string  `json:"name,omitempty"`
+	Items   []*Item `json:"item,omitempty"`
 	Request Request `json:"request"`
 }
 
