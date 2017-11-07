@@ -55,6 +55,8 @@ func main() {
 		os.Exit(1)
 	}
 
+	postman.SchemeToVariable(&collection)
+
 	json, err := json.Marshal(collection)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error exporting to JSON:", err)
