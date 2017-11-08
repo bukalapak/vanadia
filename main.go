@@ -16,6 +16,8 @@ const (
 	defaultConfigFileName = "vanadia.yml"
 )
 
+var version string
+
 func main() {
 	var (
 		inFileName     = flag.String("input", "", "Location of .apib file as input.")
@@ -26,7 +28,6 @@ func main() {
 		inFileByte []byte
 		outFile    *os.File
 		err        error
-		version    string
 	)
 
 	// Short version for version (pun non intended)

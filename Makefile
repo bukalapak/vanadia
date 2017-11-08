@@ -1,5 +1,5 @@
 vanadia: main.go blueprint/drafter.go blueprint/* postman/* config/* vendor/*
-	@go build -o vanadia
+	@go build -ldflags "-X main.version=${TRAVIS_TAG}" -o vanadia
 
 clean:
 	rm -f vanadia
