@@ -3,7 +3,7 @@ package config
 import (
 	"io/ioutil"
 
-	"github.com/saifulwebid/apib-to-postman/postman"
+	"github.com/bukalapak/apib-to-postman/postman"
 	"gopkg.in/yaml.v2"
 )
 
