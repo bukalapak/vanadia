@@ -7,9 +7,9 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/bukalapak/apib-to-postman/blueprint"
-	"github.com/bukalapak/apib-to-postman/config"
-	"github.com/bukalapak/apib-to-postman/postman"
+	"github.com/bukalapak/vanadia/blueprint"
+	"github.com/bukalapak/vanadia/config"
+	"github.com/bukalapak/vanadia/postman"
 )
 
 const (

@@ -1,8 +1,8 @@
-apib-to-postman: main.go blueprint/* postman/* config/* vendor/*
-	@go build -o apib-to-postman
+vanadia: main.go blueprint/* postman/* config/* vendor/*
+	@go build -o vanadia
 
 clean:
-	rm -f apib-to-postman
+	rm -f vanadia
 	rm -f blueprint/drafter.go
 	rm -rf blueprint/ext
 
