@@ -1,4 +1,4 @@
-vanadia: main.go blueprint/* postman/* config/* vendor/*
+vanadia: main.go blueprint/drafter.go blueprint/* postman/* config/* vendor/*
 	@go build -o vanadia
 
 clean:

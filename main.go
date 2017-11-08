@@ -13,14 +13,14 @@ import (
 )
 
 const (
-	defaultConfigFileName = "config.yml"
+	defaultConfigFileName = "vanadia.yml"
 )
 
 func main() {
 	var (
 		inFileName     = flag.String("input", "", "Location of .apib file as input.")
 		outFileName    = flag.String("output", "", "Location of Postman file.")
-		configFileName = flag.String("config", defaultConfigFileName, "Location of config.yml.")
+		configFileName = flag.String("config", defaultConfigFileName, "Location of vanadia.yml.")
 
 		inFileByte []byte
 		outFile    *os.File
