@@ -1,9 +1,13 @@
-SchemeToEnv: scheme
+SchemeToEnv:
+  Enabled: true
+  Name: scheme
 
 HostToEnv:
   segments: 2
 
-AuthTokenToEnv: access_token
+AuthTokenToEnv:
+  Enabled: true
+  Name: access_token
 
 GlobalHeaders:
 - Key: Accept
