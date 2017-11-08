@@ -87,8 +87,8 @@ func main() {
 	if cfg.HostToEnv.Segments > 0 {
 		postman.HostToEnv(&collection, cfg.HostToEnv.Segments)
 	}
-	if cfg.AuthTokenToEnv {
-		postman.AuthTokenToEnv(&collection)
+	if cfg.AuthTokenToEnv != "" {
+		postman.AuthTokenToEnv(&collection, cfg.AuthTokenToEnv)
 	}
 	postman.AddGlobalHeaders(&collection, cfg.GlobalHeaders)
 

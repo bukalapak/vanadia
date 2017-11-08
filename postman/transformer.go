@@ -36,7 +36,7 @@ func HostToEnv(c *Collection, n int) {
 	}
 }
 
-func AuthTokenToEnv(c *Collection) {
+func AuthTokenToEnv(c *Collection, placeholder string) {
 	items := getItemsFromCollection(c)
 
 	for i := range items {
@@ -48,7 +48,7 @@ func AuthTokenToEnv(c *Collection) {
 			}
 
 			values := strings.Split(header.Value, " ")
-			values[len(values)-1] = "{{access_token}}"
+			values[len(values)-1] = fmt.Sprintf("{{%s}}", placeholder)
 
 			items[i].Request.Header[j].Value = strings.Join(values, " ")
 		}

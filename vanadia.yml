@@ -3,7 +3,7 @@ SchemeToEnv: scheme
 HostToEnv:
   segments: 2
 
-AuthTokenToEnv: true
+AuthTokenToEnv: access_token
 
 GlobalHeaders:
 - Key: Accept

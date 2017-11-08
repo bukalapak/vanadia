@@ -14,7 +14,7 @@ type Config struct {
 	HostToEnv   struct {
 		Segments int `yaml:"segments,omitempty"`
 	} `yaml:"HostToEnv,omitempty"`
-	AuthTokenToEnv bool             `yaml:"AuthTokenToEnv,omitempty"`
+	AuthTokenToEnv string           `yaml:"AuthTokenToEnv,omitempty"`
 	GlobalHeaders  []postman.Header `yaml:"GlobalHeaders,omitempty"`
 }
 
