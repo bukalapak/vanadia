@@ -15,7 +15,7 @@ func SchemeToEnv(c *Collection, placeholder string) {
 	}
 }
 
-func HostToEnv(c *Collection, n int) {
+func HostToEnv(c *Collection, n int, placeholder string) {
 	items := getItemsFromCollection(c)
 
 	for i := range items {
@@ -30,7 +30,7 @@ func HostToEnv(c *Collection, n int) {
 					hostSegments[0:len(hostSegments)-2]...,
 				)
 			}
-			newHostSegments = append(newHostSegments, "{{host}}")
+			newHostSegments = append(newHostSegments, fmt.Sprintf("{{%s}}", placeholder))
 			items[i].Request.Url.Host = strings.Join(newHostSegments, ".")
 		}
 	}

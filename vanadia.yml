@@ -3,7 +3,9 @@ SchemeToEnv:
   Name: scheme
 
 HostToEnv:
-  segments: 2
+  Enabled: true
+  Segments: 2
+  Name: host
 
 AuthTokenToEnv:
   Enabled: true

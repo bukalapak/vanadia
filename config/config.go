@@ -15,7 +15,9 @@ type Config struct {
 		Name    string `yaml:"Name,omitempty"`
 	} `yaml:"SchemeToEnv,omitempty"`
 	HostToEnv struct {
-		Segments int `yaml:"segments,omitempty"`
+		Enabled  bool   `yaml:"Enabled,omitempty"`
+		Segments int    `yaml:"Segments,omitempty"`
+		Name     string `yaml:"Name,omitempty"`
 	} `yaml:"HostToEnv,omitempty"`
 	AuthTokenToEnv struct {
 		Enabled bool   `yaml:"Enabled,omitempty"`

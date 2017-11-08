@@ -84,8 +84,8 @@ func main() {
 	if cfg.SchemeToEnv.Enabled {
 		postman.SchemeToEnv(&collection, cfg.SchemeToEnv.Name)
 	}
-	if cfg.HostToEnv.Segments > 0 {
-		postman.HostToEnv(&collection, cfg.HostToEnv.Segments)
+	if cfg.HostToEnv.Enabled && cfg.HostToEnv.Segments > 0 {
+		postman.HostToEnv(&collection, cfg.HostToEnv.Segments, cfg.HostToEnv.Name)
 	}
 	if cfg.AuthTokenToEnv.Enabled {
 		postman.AuthTokenToEnv(&collection, cfg.AuthTokenToEnv.Name)
