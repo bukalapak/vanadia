@@ -36,9 +36,9 @@ type Url struct {
 }
 
 type Header struct {
-	Key         string `json:"key"`
-	Value       string `json:"value"`
-	Description string `json:"description,omitempty"`
+	Key         string `json:"key" yaml:"Key"`
+	Value       string `json:"value" yaml:"Value,omitempty"`
+	Description string `json:"description,omitempty" yaml:"Description,omitempty"`
 }
 
 type Body struct {

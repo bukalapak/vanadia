@@ -54,6 +54,14 @@ func AuthTokenToEnv(c *Collection) {
 	}
 }
 
+func AddGlobalHeaders(c *Collection, headers []Header) {
+	items := getItemsFromCollection(c)
+
+	for i := range items {
+		items[i].Request.Header = append(items[i].Request.Header, headers...)
+	}
+}
+
 func getItemsFromCollection(c *Collection) []*Item {
 	items := make([]*Item, 0)
 

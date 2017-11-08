@@ -4,3 +4,8 @@ HostToEnv:
   segments: 2
 
 AuthTokenToEnv: true
+
+GlobalHeaders:
+- Key: Accept
+  Value: application/json
+  Description: Request JSON response

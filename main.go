@@ -90,6 +90,7 @@ func main() {
 	if cfg.AuthTokenToEnv {
 		postman.AuthTokenToEnv(&collection)
 	}
+	postman.AddGlobalHeaders(&collection, cfg.GlobalHeaders)
 
 	json, err := json.MarshalIndent(collection, "", "\t")
 	if err != nil {
