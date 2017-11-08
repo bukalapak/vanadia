@@ -21,13 +21,26 @@ func main() {
 		inFileName     = flag.String("input", "", "Location of .apib file as input.")
 		outFileName    = flag.String("output", "", "Location of Postman file.")
 		configFileName = flag.String("config", defaultConfigFileName, "Location of vanadia.yml.")
+		printVersion   = flag.Bool("version", false, "Display Vanadia version")
 
 		inFileByte []byte
 		outFile    *os.File
 		err        error
+		version    string
 	)
 
+	// Short version for version (pun non intended)
+	flag.BoolVar(printVersion, "v", false, "Display Vanadia version")
+
 	flag.Parse()
+
+	if version == "" {
+		version = "HEAD"
+	}
+	if *printVersion {
+		fmt.Println("Vanadia version:", version)
+		return
+	}
 
 	if *inFileName == "" {
 		inFileByte, err = ioutil.ReadAll(os.Stdin)
