@@ -81,8 +81,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	if cfg.SchemeToEnv {
-		postman.SchemeToEnv(&collection)
+	if cfg.SchemeToEnv != "" {
+		postman.SchemeToEnv(&collection, cfg.SchemeToEnv)
 	}
 	if cfg.HostToEnv.Segments > 0 {
 		postman.HostToEnv(&collection, cfg.HostToEnv.Segments)

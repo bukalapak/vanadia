@@ -10,7 +10,7 @@ import (
 var DefaultConfig = Config{}
 
 type Config struct {
-	SchemeToEnv bool `yaml:"SchemeToEnv,omitempty"`
+	SchemeToEnv string `yaml:"SchemeToEnv,omitempty"`
 	HostToEnv   struct {
 		Segments int `yaml:"segments,omitempty"`
 	} `yaml:"HostToEnv,omitempty"`

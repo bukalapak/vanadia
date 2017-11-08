@@ -1,4 +1,4 @@
-SchemeToEnv: true
+SchemeToEnv: scheme
 
 HostToEnv:
   segments: 2

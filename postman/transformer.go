@@ -1,15 +1,16 @@
 package postman
 
 import (
+	"fmt"
 	"strings"
 )
 
-func SchemeToEnv(c *Collection) {
+func SchemeToEnv(c *Collection, placeholder string) {
 	items := getItemsFromCollection(c)
 
 	for i := range items {
 		if items[i].Request.Url.Protocol != "" {
-			items[i].Request.Url.Protocol = "{{scheme}}"
+			items[i].Request.Url.Protocol = fmt.Sprintf("{{%s}}", placeholder)
 		}
 	}
 }
