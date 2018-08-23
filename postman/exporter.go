@@ -23,7 +23,7 @@ func CreateCollection(bp *api.API) (Collection, error) {
 		Info: Information{
 			Name:      bp.Title,
 			PostmanID: bp.Title,
-			Schema:    "https://schema.getpostman.com/json/collection/v2.1.0/docs/index.html",
+			Schema:    "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		},
 		Items: folders,
 	}
