@@ -19,3 +19,7 @@ vanadia
 # Drafter
 blueprint/ext
 blueprint/drafter.go
+
+# IntelliJ Idea files
+/.idea
+*.iml
