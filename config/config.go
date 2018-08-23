@@ -3,7 +3,7 @@ package config
 import (
 	"io/ioutil"
 
-	"github.com/bukalapak/vanadia/postman"
+	"github.com/SharperShape/vanadia/postman"
 	"gopkg.in/yaml.v2"
 )
 

@@ -7,9 +7,9 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/bukalapak/vanadia/blueprint"
-	"github.com/bukalapak/vanadia/config"
-	"github.com/bukalapak/vanadia/postman"
+	"github.com/SharperShape/vanadia/blueprint"
+	"github.com/SharperShape/vanadia/config"
+	"github.com/SharperShape/vanadia/postman"
 )
 
 const (

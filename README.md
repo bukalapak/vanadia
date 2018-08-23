@@ -6,10 +6,10 @@ A utility to export [API Blueprint](https://github.com/apiaryio/api-blueprint) `
 
 ## Installation
 
-The latest executables for Linux and OSX are available from the [release page](https://github.com/bukalapak/vanadia/releases), so it can be executed directly:
+The latest executables for Linux and OSX are available from the [release page](https://github.com/SharperShape/vanadia/releases), so it can be executed directly:
 
 ```sh
-$ wget https://github.com/bukalapak/vanadia/releases/download/${VERSION}/vanadia-${VERSION}.${OS}-amd64.tar.gz
+$ wget https://github.com/SharperShape/vanadia/releases/download/${VERSION}/vanadia-${VERSION}.${OS}-amd64.tar.gz
 $ tar -xzf vanadia-${VERSION}.${OS}-amd64.tar.gz
 $ ./vanadia -h
 ```
@@ -19,7 +19,7 @@ $ ./vanadia -h
 If you want to be in bleeding edge, you can manually build from `master`:
 
 ```sh
-$ git clone https://github.com/bukalapak/vanadia.git
+$ git clone https://github.com/SharperShape/vanadia.git
 $ cd vanadia
 $ make
 ```
