@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/bukalapak/snowboard/api"
+	"net/http"
 )
 
 func CreateCollection(bp *api.API) (Collection, error) {
@@ -21,9 +22,9 @@ func CreateCollection(bp *api.API) (Collection, error) {
 
 	coll := Collection{
 		Info: Information{
-			Name:      bp.Title,
-			PostmanID: bp.Title,
-			Schema:    "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+			Name:        bp.Title,
+			Description: bp.Description,
+			Schema:      "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		},
 		Items: folders,
 	}
@@ -43,8 +44,9 @@ func itemFromResourceGroup(rg *api.ResourceGroup) (*Item, error) {
 	}
 
 	return &Item{
-		Name:  rg.Title,
-		Items: items,
+		Name:        rg.Title,
+		Description: rg.Description,
+		Items:       items,
 	}, nil
 }
 
@@ -60,8 +62,9 @@ func itemFromResource(rsc *api.Resource) (*Item, error) {
 	}
 
 	return &Item{
-		Name:  rsc.Title,
-		Items: items,
+		Name:        rsc.Title,
+		Description: rsc.Description,
+		Items:       items,
 	}, nil
 }
 
@@ -76,22 +79,14 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 
 	item := &Item{
 		Name: tr.Title,
-		Request: Request{
-			Url:    url,
-			Method: tr.Method,
+		Request: &Request{
+			Url:         url,
+			Method:      tr.Method,
+			Description: tr.Description,
 		},
 	}
 
-	headers := []Header{}
-	for _, header := range tr.Transactions[0].Request.Headers {
-		headers = append(headers, Header{
-			Key:   header.Key,
-			Value: header.Value,
-		})
-	}
-	if len(headers) > 0 {
-		item.Request.Header = headers
-	}
+	item.Request.Header = convertHeaders(tr.Transactions[0].Request.Headers)
 
 	if tr.Transactions[0].Request.Body.Body != "" {
 		item.Request.Body = Body{
@@ -100,7 +95,28 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 		}
 	}
 
+	for _, tx := range tr.Transactions {
+		item.Response = append(item.Response, Response{
+			Name:   " ", // suppress "Untitled Response" in Postman Docs
+			Header: convertHeaders(tx.Response.Headers),
+			Body:   tx.Response.Body.Body,
+			Status: http.StatusText(tx.Response.StatusCode),
+			Code:   tx.Response.StatusCode,
+		})
+	}
+
 	return item, nil
+}
+
+func convertHeaders(apiHeaders []api.Header) []Header {
+	headers := []Header{}
+	for _, header := range apiHeaders {
+		headers = append(headers, Header{
+			Key:   header.Key,
+			Value: header.Value,
+		})
+	}
+	return headers
 }
 
 func formalizeUrl(urlString string) (Url, error) {

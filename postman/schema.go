@@ -8,23 +8,34 @@ type Collection struct {
 }
 
 type Information struct {
-	Name      string `json:"name"`
-	PostmanID string `json:"_postman_id,omitempty"`
-	Schema    string `json:"schema"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Schema      string `json:"schema"`
 }
 
 // Item represents both `Folder` and `Item` in Postman schema.
 type Item struct {
-	Name    string  `json:"name,omitempty"`
-	Items   []*Item `json:"item,omitempty"`
-	Request Request `json:"request"`
+	Name        string     `json:"name,omitempty"`
+	Description string     `json:"description,omitempty"`
+	Request     *Request   `json:"request,omitempty"`
+	Response    []Response `json:"response,omitempty"`
+	Items       []*Item    `json:"item,omitempty"`
 }
 
 type Request struct {
-	Url    Url      `json:"url,omitempty"`
-	Method string   `json:"method,omitempty"`
+	Url         Url      `json:"url,omitempty"`
+	Method      string   `json:"method,omitempty"`
+	Description string   `json:"description,omitempty"`
+	Header      []Header `json:"header,omitempty"`
+	Body        Body     `json:"body,omitempty"`
+}
+
+type Response struct {
+	Name   string   `json:"name"` // undocumented (not in the schema)
 	Header []Header `json:"header,omitempty"`
-	Body   Body     `json:"body,omitempty"`
+	Body   string   `json:"body,omitempty"`
+	Status string   `json:"status,omitempty"`
+	Code   int      `json:"code,omitempty"`
 }
 
 type Url struct {

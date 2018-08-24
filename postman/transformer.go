@@ -9,7 +9,7 @@ func SchemeToEnv(c *Collection, placeholder string) {
 	items := getItemsFromCollection(c)
 
 	for i := range items {
-		if items[i].Request.Url.Protocol != "" {
+		if items[i].Request != nil && items[i].Request.Url.Protocol != "" {
 			items[i].Request.Url.Protocol = fmt.Sprintf("{{%s}}", placeholder)
 		}
 	}
@@ -19,6 +19,9 @@ func HostToEnv(c *Collection, n int, placeholder string) {
 	items := getItemsFromCollection(c)
 
 	for i := range items {
+		if items[i].Request == nil {
+			continue
+		}
 		host := items[i].Request.Url.Host
 		if host != "" {
 			hostSegments := strings.Split(host, ".")
@@ -40,6 +43,9 @@ func AuthTokenToEnv(c *Collection, placeholder string) {
 	items := getItemsFromCollection(c)
 
 	for i := range items {
+		if items[i].Request == nil {
+			continue
+		}
 		for j := range items[i].Request.Header {
 			header := items[i].Request.Header[j]
 
@@ -59,6 +65,9 @@ func AddGlobalHeaders(c *Collection, headers []Header) {
 	items := getItemsFromCollection(c)
 
 	for i := range items {
+		if items[i].Request == nil {
+			continue
+		}
 		items[i].Request.Header = append(items[i].Request.Header, headers...)
 	}
 }
