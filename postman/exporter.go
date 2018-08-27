@@ -96,10 +96,14 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 	}
 
 	for _, tx := range tr.Transactions {
+		body := tx.Response.Body.Body
+		if body == "" {
+			body = " " // add dummy body, otherwise Postman Docs will not show the response at all
+		}
 		item.Response = append(item.Response, Response{
 			Name:   " ", // suppress "Untitled Response" in Postman Docs
 			Header: convertHeaders(tx.Response.Headers),
-			Body:   tx.Response.Body.Body,
+			Body:   body,
 			Status: http.StatusText(tx.Response.StatusCode),
 			Code:   tx.Response.StatusCode,
 		})
