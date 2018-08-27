@@ -86,13 +86,22 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 		},
 	}
 
-	item.Request.Header = convertHeaders(tr.Transactions[0].Request.Headers)
+	first := tr.Transactions[0]
+	item.Request.Header = convertHeaders(first.Request.Headers)
 
-	if tr.Transactions[0].Request.Body.Body != "" {
+	if first.Request.Body.Body != "" {
 		item.Request.Body = Body{
 			Mode: "raw",
-			Raw:  tr.Transactions[0].Request.Body.Body,
+			Raw:  first.Request.Body.Body,
 		}
+	}
+
+	if first.Request.Schema.Body != "" {
+		item.Request.Description += "\n\n###### Request Attributes\n" + DescribeJsonSchema(first.Request.Schema.Body)
+	}
+
+	if first.Response.Schema.Body != "" {
+		item.Request.Description += "\n\n###### Response Attributes\n" + DescribeJsonSchema(first.Response.Schema.Body)
 	}
 
 	for _, tx := range tr.Transactions {
@@ -113,7 +122,7 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 }
 
 func convertHeaders(apiHeaders []api.Header) []Header {
-	headers := []Header{}
+	var headers []Header
 	for _, header := range apiHeaders {
 		headers = append(headers, Header{
 			Key:   header.Key,

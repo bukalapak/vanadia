@@ -12,6 +12,6 @@ AuthTokenToEnv:
   Name: access_token
 
 GlobalHeaders:
-- Key: Accept
-  Value: application/json
-  Description: Request JSON response
+#- Key: Accept
+#  Value: application/json
+#  Description: Request JSON response
