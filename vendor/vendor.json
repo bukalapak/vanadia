@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "FK8PY+l79ufT2l2rrLyg7mnS21s=",
+			"path": "github.com/buger/jsonparser",
+			"revision": "f4dd9f5a6b441265aefc1d44872a6f8c10f42b37",
+			"revisionTime": "2018-07-06T12:04:31Z"
+		},
+		{
 			"checksumSHA1": "Q3qvQq1Vgc/7WWZgZwvXCM2fx14=",
 			"path": "github.com/bukalapak/snowboard/api",
 			"revision": "017112eded9fd89c51220bdf2ade40619e4ae3c6",

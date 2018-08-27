@@ -97,11 +97,13 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 	}
 
 	if first.Request.Schema.Body != "" {
-		item.Request.Description += "\n\n###### Request Attributes\n" + DescribeJsonSchema(first.Request.Schema.Body)
+		item.Request.Description += "\n\n###### Request Attributes\n" +
+			DescribeJsonSchema([]byte(first.Request.Schema.Body))
 	}
 
 	if first.Response.Schema.Body != "" {
-		item.Request.Description += "\n\n###### Response Attributes\n" + DescribeJsonSchema(first.Response.Schema.Body)
+		item.Request.Description += "\n\n###### Response Attributes\n" +
+			DescribeJsonSchema([]byte(first.Response.Schema.Body))
 	}
 
 	for _, tx := range tr.Transactions {

@@ -1,47 +1,53 @@
 package postman
 
 import (
-	"encoding/json"
 	"strings"
-	"html"
-	"fmt"
+	json "github.com/buger/jsonparser"
 )
 
-func DescribeJsonSchema(schema string) string {
-	var s map[string]interface{}
-	json.Unmarshal([]byte(schema), &s)
+func DescribeJsonSchema(schema []byte) string {
 	b := strings.Builder{}
-	describeJsonType(&b, s, true)
+	describeJsonType(&b, schema, true)
 	return b.String()
 }
 
-func describeJsonType(b *strings.Builder, jsonType map[string]interface{}, outerFrame bool) {
+func describeJsonType(b *strings.Builder, schema []byte, outerFrame bool) {
 	writeType := func() {
-		if typ, ok := jsonType["type"]; ok {
-			b.WriteString(" _")
-			b.WriteString(html.EscapeString(fmt.Sprintf("%v", typ)))
-			b.WriteString("_\n")
+		typ, dataType, _, _ := json.Get(schema, "type")
+		b.WriteString(" _")
+		switch dataType {
+		case json.String:
+			b.WriteString(string(typ))
+		case json.Array:
+			json.ArrayEach(schema, func(value []byte, _ json.ValueType, _ int, _ error) {
+				b.WriteString(string(value))
+				b.WriteRune(' ')
+			})
 		}
+		b.WriteString("_\n")
 	}
 	writeDesc := func() {
-		if desc, ok := jsonType["description"]; ok {
-			b.WriteString(desc.(string))
+		if desc, dataType, _, _ := json.Get(schema, "description"); dataType == json.String {
+			b.Write(desc)
 		}
 	}
 
-	if props, ok := jsonType["properties"]; ok { // object
+	if props, dataType, _, _ := json.Get(schema, "properties"); dataType == json.Object { // object
 		if !outerFrame {
 			writeType()
 		}
 		writeDesc()
-		describeObject(b, props.(map[string]interface{}), requiredFunc(jsonType))
+		describeObject(b, props, buildRequired(schema))
 	} else {
 		if outerFrame {
 			b.WriteString("<table><tr><td>")
 		}
 		writeType()
 		writeDesc()
-		if items, ok := jsonType["items"]; ok { // array
+		items, dataType, _, _ := json.Get(schema, "items")
+		if dataType == json.Object {
+			describeJsonType(b, items, true)
+		} else if dataType == json.Array {
 			describeArray(b, items)
 		}
 		if outerFrame {
@@ -50,46 +56,33 @@ func describeJsonType(b *strings.Builder, jsonType map[string]interface{}, outer
 	}
 }
 
-func describeObject(b *strings.Builder, props map[string]interface{}, required func(string) bool) {
+func describeObject(b *strings.Builder, props []byte, required map[string]bool) {
 	b.WriteString("<table>")
-	for name, v := range props {
+	json.ObjectEach(props, func(key []byte, value []byte, _ json.ValueType, _ int) error {
 		b.WriteString("<tr><td>`")
-		b.WriteString(html.EscapeString(name))
-		if required(name) {
+		b.WriteString(string(key))
+		if required[string(key)] {
 			b.WriteString("` \\*</td><td>")
 		} else {
 			b.WriteString("`</td><td>")
 		}
-		describeJsonType(b, v.(map[string]interface{}), false)
+		describeJsonType(b, value, false)
 		b.WriteString("</td></tr>")
-	}
+		return nil
+	})
 	b.WriteString("</table>")
 }
 
-func describeArray(b *strings.Builder, items interface{}) {
-	b.WriteRune('\n')
-	switch it := items.(type) {
-	case map[string]interface{}:
-		describeJsonType(b, it, true)
-	case []interface{}:
-		for _, item := range it {
-			describeJsonType(b, item.(map[string]interface{}), true)
-		}
-	}
+func describeArray(b *strings.Builder, items []byte) {
+	json.ArrayEach(items, func(value []byte, _ json.ValueType, _ int, _ error) {
+		describeJsonType(b, value, true)
+	})
 }
 
-func requiredFunc(jsonType map[string]interface{}) func(string) bool {
-	if req, ok := jsonType["required"]; ok {
-		return func(name string) bool {
-			for _, attr := range req.([]interface{}) {
-				if attr.(string) == name {
-					return true
-				}
-			}
-			return false
-		}
-	}
-	return func(string) bool {
-		return false
-	}
+func buildRequired(schema []byte) map[string]bool {
+	var reqs = map[string]bool{}
+	json.ArrayEach(schema, func(value []byte, _ json.ValueType, _ int, _ error) {
+		reqs[string(value)] = true
+	}, "required")
+	return reqs
 }
