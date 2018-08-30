@@ -7,6 +7,7 @@ import (
 
 	"github.com/bukalapak/snowboard/api"
 	"net/http"
+	"fmt"
 )
 
 func CreateCollection(bp *api.API) (Collection, error) {
@@ -86,6 +87,10 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 		},
 	}
 
+	if len(tr.Transactions) == 0 {
+		return item, nil
+	}
+
 	first := tr.Transactions[0]
 	item.Request.Header = convertHeaders(first.Request.Headers)
 
@@ -111,12 +116,14 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 		if body == "" {
 			body = " " // add dummy body, otherwise Postman Docs will not show the response at all
 		}
+		code := tx.Response.StatusCode
+		status := http.StatusText(code)
 		item.Response = append(item.Response, Response{
-			Name:   " ", // suppress "Untitled Response" in Postman Docs
+			Name:   fmt.Sprintf("%d %s", code, status),
 			Header: convertHeaders(tx.Response.Headers),
 			Body:   body,
-			Status: http.StatusText(tx.Response.StatusCode),
-			Code:   tx.Response.StatusCode,
+			Status: status,
+			Code:   code,
 		})
 	}
 

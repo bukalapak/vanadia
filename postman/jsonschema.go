@@ -14,7 +14,7 @@ func DescribeJsonSchema(schema []byte) string {
 func describeJsonType(b *strings.Builder, schema []byte, outerFrame bool) {
 	writeType := func() {
 		typ, dataType, _, _ := json.Get(schema, "type")
-		b.WriteString(" _")
+		b.WriteString(" _") // TODO fix when "anyOf"
 		switch dataType {
 		case json.String:
 			b.WriteString(string(typ))
@@ -23,8 +23,21 @@ func describeJsonType(b *strings.Builder, schema []byte, outerFrame bool) {
 				b.WriteString(string(value))
 				b.WriteRune(' ')
 			})
+		case json.NotExist:
+			b.WriteString("any")
 		}
-		b.WriteString("_\n")
+		b.WriteString("_")
+
+		if enum, dataType, _, _ := json.Get(schema, "enum"); dataType == json.Array {
+			b.WriteString(", one of:")
+			json.ArrayEach(enum, func(value []byte, _ json.ValueType, _ int, _ error) {
+				b.WriteString(" `")
+				b.WriteString(string(value))
+				b.WriteString("`")
+			})
+		}
+
+		b.WriteRune('\n')
 	}
 	writeDesc := func() {
 		if desc, dataType, _, _ := json.Get(schema, "description"); dataType == json.String {
