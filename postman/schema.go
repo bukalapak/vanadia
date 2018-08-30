@@ -5,11 +5,12 @@ package postman
 type Collection struct {
 	Info  Information `json:"info"`
 	Items []*Item     `json:"item,omitempty"`
+	Auth  Auth        `json:"auth,omitempty"`
 }
 
 type Information struct {
 	Name        string `json:"name"`
-	Description string `json:"description"`
+	Description string `json:"description,omitempty"`
 	Schema      string `json:"schema"`
 }
 
@@ -67,4 +68,15 @@ type Variable struct {
 	Key         string `json:"key"`
 	Value       string `json:"value,omitempty"`
 	Description string `json:"description,omitempty"`
+}
+
+type Auth struct {
+	Type   string   `json:"type"`
+	Bearer []Bearer `json:"bearer"`
+}
+
+type Bearer struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+	Type  string `json:"type"`
 }

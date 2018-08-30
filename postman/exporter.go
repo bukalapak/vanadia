@@ -28,6 +28,16 @@ func CreateCollection(bp *api.API) (Collection, error) {
 			Schema:      "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		},
 		Items: folders,
+		Auth: Auth{
+			Type: "bearer",
+			Bearer: []Bearer{
+				Bearer{
+					Key:   "token",
+					Value: "{{token}}",
+					Type:  "string",
+				},
+			},
+		},
 	}
 
 	return coll, nil
