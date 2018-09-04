@@ -85,8 +85,8 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 		return nil, err
 	}
 
-	url = explainQueryParams(url, tr)
-	url = explainVariables(url, tr)
+	explainQueryParams(url, tr)
+	explainVariables(url, tr)
 
 	item := &Item{
 		Name: tr.Title,
@@ -200,52 +200,24 @@ func formalizeUrl(urlString string) (Url, error) {
 	}, nil
 }
 
-func explainQueryParams(u Url, tr *api.Transition) Url {
-	queryMap := make(map[string]QueryParam)
-
-	for _, query := range u.Query {
-		queryMap[query.Key] = query
-	}
-
+func explainQueryParams(u Url, tr *api.Transition) {
 	for _, param := range tr.Href.Parameters {
-		if query, found := queryMap[param.Key]; found {
-			query.Value = param.Value
-			query.Description = param.Description
-
-			queryMap[param.Key] = query
+		for i, query := range u.Query {
+			if query.Key == param.Key {
+				u.Query[i].Value = param.Value
+				u.Query[i].Description = param.Description
+			}
 		}
 	}
-
-	querySlice := []QueryParam{}
-	for _, query := range queryMap {
-		querySlice = append(querySlice, query)
-	}
-
-	u.Query = querySlice
-	return u
 }
 
-func explainVariables(u Url, tr *api.Transition) Url {
-	variableMap := make(map[string]Variable)
-
-	for _, variable := range u.Variable {
-		variableMap[variable.Key] = variable
-	}
-
+func explainVariables(u Url, tr *api.Transition) {
 	for _, param := range tr.Href.Parameters {
-		if variable, found := variableMap[param.Key]; found {
-			variable.Value = param.Value
-			variable.Description = param.Description
-
-			variableMap[param.Key] = variable
+		for i, variable := range u.Variable {
+			if variable.Key == param.Key {
+				u.Variable[i].Value = param.Value
+				u.Variable[i].Description = param.Description
+			}
 		}
 	}
-
-	variableSclie := []Variable{}
-	for _, variable := range variableMap {
-		variableSclie = append(variableSclie, variable)
-	}
-
-	u.Variable = variableSclie
-	return u
 }
