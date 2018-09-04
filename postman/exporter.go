@@ -10,6 +10,11 @@ import (
 	"fmt"
 )
 
+const (
+	ModelTag  = "__model__"
+	CustomTag = "__custom__"
+)
+
 func CreateCollection(bp *api.API) (Collection, error) {
 	folders := []*Item{}
 	for _, resourceGroup := range bp.ResourceGroups {
@@ -74,9 +79,26 @@ func itemFromResource(rsc *api.Resource) (*Item, error) {
 
 	return &Item{
 		Name:        rsc.Title,
-		Description: rsc.Description,
+		Description: rsc.Description + describeModel(rsc),
 		Items:       items,
 	}, nil
+}
+
+func describeModel(rsc *api.Resource) string {
+	for _, tr := range rsc.Transitions {
+		for _, tx := range tr.Transactions {
+			var schema string
+			if strings.Contains(tx.Request.Description, ModelTag) {
+				schema = tx.Request.Schema.Body
+			} else  if strings.Contains(tx.Response.Description, ModelTag) {
+				schema = tx.Response.Schema.Body
+			} else {
+				continue
+			}
+			return "\n\n## Model\n" + DescribeJsonSchema([]byte(schema))
+		}
+	}
+	return ""
 }
 
 func itemFromTransition(tr *api.Transition) (*Item, error) {
@@ -111,14 +133,9 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 		}
 	}
 
-	if first.Request.Schema.Body != "" {
+	if strings.Contains(first.Request.Description, CustomTag) {
 		item.Request.Description += "\n\n###### Request Attributes\n" +
 			DescribeJsonSchema([]byte(first.Request.Schema.Body))
-	}
-
-	if first.Response.Schema.Body != "" {
-		item.Request.Description += "\n\n###### Response Attributes\n" +
-			DescribeJsonSchema([]byte(first.Response.Schema.Body))
 	}
 
 	for _, tx := range tr.Transactions {
@@ -135,6 +152,10 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 			Status: status,
 			Code:   code,
 		})
+		if strings.Contains(tx.Response.Description, CustomTag) {
+			item.Request.Description += "\n\n###### Response Attributes\n" +
+				DescribeJsonSchema([]byte(first.Response.Schema.Body))
+		}
 	}
 
 	return item, nil
