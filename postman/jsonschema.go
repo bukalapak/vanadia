@@ -1,8 +1,8 @@
 package postman
 
 import (
-	"strings"
 	json "github.com/buger/jsonparser"
+	"strings"
 )
 
 func DescribeJsonSchema(schema []byte) string {
@@ -29,11 +29,17 @@ func describeJsonType(b *strings.Builder, schema []byte, outerFrame bool) {
 		b.WriteString("_")
 
 		if enum, dataType, _, _ := json.Get(schema, "enum"); dataType == json.Array {
+			// generated enum values might contain duplicates in some situations
+			values := map[string]bool{}
 			b.WriteString(", one of:")
 			json.ArrayEach(enum, func(value []byte, _ json.ValueType, _ int, _ error) {
-				b.WriteString(" `")
-				b.WriteString(string(value))
-				b.WriteString("`")
+				v := string(value)
+				if !values[v] {
+					values[v] = true
+					b.WriteString(" `")
+					b.WriteString(v)
+					b.WriteString("`")
+				}
 			})
 		}
 
