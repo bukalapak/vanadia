@@ -1,10 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"github.com/SharperShape/vanadia/markdown"
 	"os"
 
 	"github.com/SharperShape/vanadia/blueprint"
@@ -42,13 +43,15 @@ func main() {
 		return
 	}
 
+	var file *os.File
 	if *inFileName == "" {
-		inFileByte, err = ioutil.ReadAll(os.Stdin)
-	} else {
-		inFileByte, err = ioutil.ReadFile(*inFileName)
+		inFileByte, err = markdown.Preprocess(os.Stdin)
+	} else if file, err = os.Open(*inFileName); err == nil {
+		inFileByte, err = markdown.Preprocess(bufio.NewReader(file))
+		file.Close()
 	}
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "error on read input:", err)
+		fmt.Fprintln(os.Stderr, "error reading input:", err)
 		os.Exit(1)
 	}
 
