@@ -31,7 +31,7 @@ func CreateCollection(bp *api.API) (Collection, error) {
 		Auth: Auth{
 			Type: "bearer",
 			Bearer: []Bearer{
-				Bearer{
+				{
 					Key:   "token",
 					Value: "{{token}}",
 					Type:  "string",
@@ -156,7 +156,7 @@ func formalizeUrl(urlString string) (Url, error) {
 	var variables []Variable
 
 	// Get query parameters
-	re := regexp.MustCompile(`\{\?([a-z_,-]+)\}$`)
+	re := regexp.MustCompile(`\{\?([a-zA-Z_,.-]+)\}$`)
 	allMatch := re.FindAllStringSubmatch(urlString, -1)
 
 	for _, innerMatch := range allMatch {
@@ -171,7 +171,7 @@ func formalizeUrl(urlString string) (Url, error) {
 	urlString = re.ReplaceAllString(urlString, "")
 
 	// Get variables
-	re = regexp.MustCompile(`\{([a-z_-]+)\}`)
+	re = regexp.MustCompile(`\{([a-zA-Z_.-]+)\}`)
 	allMatch = re.FindAllStringSubmatch(urlString, -1)
 
 	for _, innerMatch := range allMatch {
