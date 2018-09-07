@@ -9,7 +9,12 @@ func SchemeToEnv(c *Collection, placeholder string) {
 	items := getItemsFromCollection(c)
 
 	for i := range items {
-		if items[i].Request != nil && items[i].Request.Url.Protocol != "" {
+		if items[i].Request == nil || items[i].Request.Url.Protocol == "" {
+			continue
+		}
+		if placeholder == "" {
+			items[i].Request.Url.Protocol = ""
+		} else {
 			items[i].Request.Url.Protocol = fmt.Sprintf("{{%s}}", placeholder)
 		}
 	}

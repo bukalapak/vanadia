@@ -40,7 +40,7 @@ type Response struct {
 }
 
 type Url struct {
-	Protocol string       `json:"protocol"`
+	Protocol string       `json:"protocol,omitempty"`
 	Host     string       `json:"host"`
 	Path     string       `json:"path"`
 	Query    []QueryParam `json:"query,omitempty"`

@@ -1,6 +1,6 @@
 SchemeToEnv:
   Enabled: true
-  Name: scheme
+  Name:
 
 HostToEnv:
   Enabled: true
