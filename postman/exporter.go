@@ -11,9 +11,11 @@ import (
 )
 
 const (
-	ModelTag  = "__model__"
-	CustomTag = "__custom__"
+	modelTag  = "__model__"
+	customTag = "__custom__"
 )
+
+var markdownListItem = regexp.MustCompile(`\n\n([-+*].+)`)
 
 func CreateCollection(bp *api.API) (Collection, error) {
 	folders := []*Item{}
@@ -29,7 +31,7 @@ func CreateCollection(bp *api.API) (Collection, error) {
 	coll := Collection{
 		Info: Information{
 			Name:        bp.Title,
-			Description: bp.Description,
+			Description: fixMarkdown(bp.Description),
 			Schema:      "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		},
 		Items: folders,
@@ -61,7 +63,7 @@ func itemFromResourceGroup(rg *api.ResourceGroup) (*Item, error) {
 
 	return &Item{
 		Name:        rg.Title,
-		Description: rg.Description,
+		Description: fixMarkdown(rg.Description),
 		Items:       items,
 	}, nil
 }
@@ -79,7 +81,7 @@ func itemFromResource(rsc *api.Resource) (*Item, error) {
 
 	return &Item{
 		Name:        rsc.Title,
-		Description: rsc.Description + describeModel(rsc),
+		Description: fixMarkdown(rsc.Description) + describeModel(rsc),
 		Items:       items,
 	}, nil
 }
@@ -88,9 +90,9 @@ func describeModel(rsc *api.Resource) string {
 	for _, tr := range rsc.Transitions {
 		for _, tx := range tr.Transactions {
 			var schema string
-			if strings.Contains(tx.Request.Description, ModelTag) {
+			if strings.Contains(tx.Request.Description, modelTag) {
 				schema = tx.Request.Schema.Body
-			} else  if strings.Contains(tx.Response.Description, ModelTag) {
+			} else  if strings.Contains(tx.Response.Description, modelTag) {
 				schema = tx.Response.Schema.Body
 			} else {
 				continue
@@ -115,7 +117,7 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 		Request: &Request{
 			Url:         url,
 			Method:      tr.Method,
-			Description: tr.Description,
+			Description: fixMarkdown(tr.Description),
 		},
 	}
 
@@ -133,7 +135,7 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 		}
 	}
 
-	if strings.Contains(first.Request.Description, CustomTag) {
+	if strings.Contains(first.Request.Description, customTag) {
 		item.Request.Description += "\n\n###### Request Attributes\n" +
 			DescribeJsonSchema([]byte(first.Request.Schema.Body))
 	}
@@ -152,7 +154,7 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 			Status: status,
 			Code:   code,
 		})
-		if strings.Contains(tx.Response.Description, CustomTag) {
+		if strings.Contains(tx.Response.Description, customTag) {
 			item.Request.Description += "\n\n###### Response Attributes\n" +
 				DescribeJsonSchema([]byte(first.Response.Schema.Body))
 		}
@@ -241,4 +243,9 @@ func explainVariables(u Url, tr *api.Transition) {
 			}
 		}
 	}
+}
+
+func fixMarkdown(md string) string {
+	// remove double linebreaks before list items
+	return string(markdownListItem.ReplaceAll([]byte(md), []byte("\n$1")))
 }
