@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/SharperShape/vanadia/markdown"
 	"os"
+	"path"
 
 	"github.com/SharperShape/vanadia/blueprint"
 	"github.com/SharperShape/vanadia/config"
@@ -45,9 +46,12 @@ func main() {
 
 	var file *os.File
 	if *inFileName == "" {
-		inFileByte, err = markdown.Preprocess(os.Stdin)
+		wd, err := os.Getwd()
+		if err != nil {
+			inFileByte, err = markdown.Preprocess(os.Stdin, wd)
+		}
 	} else if file, err = os.Open(*inFileName); err == nil {
-		inFileByte, err = markdown.Preprocess(bufio.NewReader(file))
+		inFileByte, err = markdown.Preprocess(bufio.NewReader(file), path.Dir(file.Name()))
 		file.Close()
 	}
 	if err != nil {
