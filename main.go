@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/SharperShape/vanadia/markdown"
+	"github.com/bukalapak/snowboard/api"
 	"os"
 	"path"
 
@@ -101,6 +102,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	if cfg.PostmanHost.Enabled {
+		postmanHost := getPostmanHost(bp.Metadata)
+		if postmanHost != "" {
+			postman.HostToEnvFixed(&collection, postmanHost)
+		}
+	}
 	if cfg.SchemeToEnv.Enabled {
 		postman.SchemeToEnv(&collection, cfg.SchemeToEnv.Name)
 	}
@@ -123,4 +130,13 @@ func main() {
 		fmt.Fprintln(os.Stderr, "error on write output:", err)
 		os.Exit(1)
 	}
+}
+
+func getPostmanHost(meta []api.Metadata) string {
+	for _, entry := range meta {
+		if entry.Key == "POSTMAN_HOST" {
+			return entry.Value
+		}
+	}
+	return ""
 }

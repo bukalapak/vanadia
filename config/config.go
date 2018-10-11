@@ -10,6 +10,9 @@ import (
 var DefaultConfig = Config{}
 
 type Config struct {
+	PostmanHost struct {
+		Enabled bool `yaml:"Enabled,omitempty"`
+	} `yaml:"PostmanHost,omitempty"`
 	SchemeToEnv struct {
 		Enabled bool   `yaml:"Enabled,omitempty"`
 		Name    string `yaml:"Name,omitempty"`

@@ -44,6 +44,21 @@ func HostToEnv(c *Collection, n int, placeholder string) {
 	}
 }
 
+func HostToEnvFixed(c *Collection, host string) {
+	items := getItemsFromCollection(c)
+	schemeHost := strings.Split(host, "://")
+
+	for i := range items {
+		if items[i].Request == nil {
+			continue
+		}
+		if items[i].Request.Url.Host != "" {
+			items[i].Request.Url.Protocol = schemeHost[0]
+			items[i].Request.Url.Host = schemeHost[1]
+		}
+	}
+}
+
 func AuthTokenToEnv(c *Collection, placeholder string) {
 	items := getItemsFromCollection(c)
 

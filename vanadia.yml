@@ -1,9 +1,12 @@
-SchemeToEnv:
+PostmanHost:
   Enabled: true
-  Name:
+
+SchemeToEnv:
+  Enabled: false
+  Name: scheme
 
 HostToEnv:
-  Enabled: true
+  Enabled: false
   Segments: 2
   Name: host
 
@@ -12,6 +15,6 @@ AuthTokenToEnv:
   Name: access_token
 
 GlobalHeaders:
-#- Key: Accept
-#  Value: application/json
-#  Description: Request JSON response
+- Key: Accept
+  Value: application/json
+  Description: Request JSON response
