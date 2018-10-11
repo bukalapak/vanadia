@@ -1,0 +1,36 @@
+build:
+  box: golang:1.11
+  base-path: /go/src/github.com/SharperShape/vanadia
+  steps:
+    - script:
+      name: install govendor
+      code: go get -u github.com/kardianos/govendor
+    - script:
+      name: install dependencies
+      code: govendor sync
+    - script:
+      name: build
+      code: apt-get update && apt-get install -y make && make
+
+release:
+  box:
+    id: quay.io/sharpershape/package-fpm
+    registry: quay.io
+  steps:
+    - script:
+      name: move binary
+      code: mkdir -p package/bin && mv vanadia ./package/bin/
+    - script:
+      name: package
+      code: |
+        version_prefix="1.0.0"
+        version_suffix=`date +%Y%m%d%H%M%S`
+        version="${version_prefix}+${version_suffix}"
+        echo "Create package: ${version}"
+        ./bin/package.sh $version $WERCKER_SOURCE_DIR/package $WERCKER_OUTPUT_DIR/vanadia.deb
+    - script:
+      name: install curl
+      code: apt-get update && apt-get install -y curl
+    - script:
+      name: release deb package
+      code: curl -F package=@$WERCKER_OUTPUT_DIR/vanadia.deb https://${GEMFURY_TOKEN}@push.fury.io/sharpershape/
