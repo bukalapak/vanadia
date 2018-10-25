@@ -31,12 +31,18 @@ func describeJsonType(b *strings.Builder, schema []byte, outerFrame bool) {
 		if enum, dataType, _, _ := json.Get(schema, "enum"); dataType == json.Array {
 			// generated enum values might contain duplicates in some situations
 			values := map[string]bool{}
+			first := true
 			b.WriteString(", one of:")
 			json.ArrayEach(enum, func(value []byte, _ json.ValueType, _ int, _ error) {
 				v := string(value)
 				if !values[v] {
 					values[v] = true
-					b.WriteString(" `")
+					if first {
+						b.WriteString(" `")
+						first = false
+					} else {
+						b.WriteString(", `")
+					}
 					b.WriteString(v)
 					b.WriteString("`")
 				}
