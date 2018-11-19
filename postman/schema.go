@@ -27,7 +27,7 @@ type Request struct {
 	Method      string   `json:"method,omitempty"`
 	Description string   `json:"description,omitempty"`
 	Header      []Header `json:"header,omitempty"`
-	Body        Body     `json:"body,omitempty"`
+	Body        *Body    `json:"body,omitempty"`
 }
 
 type Response struct {

@@ -119,7 +119,7 @@ func itemFromTransition(tr *api.Transition) (*Item, error) {
 	item.Request.Header = convertHeaders(first.Request.Headers)
 
 	if first.Request.Body.Body != "" {
-		item.Request.Body = Body{
+		item.Request.Body = &Body{
 			Mode: "raw",
 			Raw:  first.Request.Body.Body,
 		}
