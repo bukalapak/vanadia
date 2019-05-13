@@ -2,6 +2,7 @@ package postman
 
 import (
 	json "github.com/buger/jsonparser"
+	"regexp"
 	"strings"
 )
 
@@ -14,7 +15,7 @@ func DescribeJsonSchema(schema []byte) string {
 func describeJsonType(b *strings.Builder, schema []byte, outerFrame bool) {
 	writeType := func() {
 		typ, dataType, _, _ := json.Get(schema, "type")
-		b.WriteString(" _") // TODO fix when "anyOf"
+		b.WriteString(" <em>") // TODO fix when "anyOf"
 		switch dataType {
 		case json.String:
 			b.WriteString(string(typ))
@@ -26,7 +27,7 @@ func describeJsonType(b *strings.Builder, schema []byte, outerFrame bool) {
 		case json.NotExist:
 			b.WriteString("any")
 		}
-		b.WriteString("_")
+		b.WriteString("</em>")
 
 		if enum, dataType, _, _ := json.Get(schema, "enum"); dataType == json.Array {
 			// generated enum values might contain duplicates in some situations
@@ -38,13 +39,13 @@ func describeJsonType(b *strings.Builder, schema []byte, outerFrame bool) {
 				if !values[v] {
 					values[v] = true
 					if first {
-						b.WriteString(" `")
+						b.WriteString(" <code>")
 						first = false
 					} else {
-						b.WriteString(", `")
+						b.WriteString(", <code>")
 					}
 					b.WriteString(v)
-					b.WriteString("`")
+					b.WriteString("</code>")
 				}
 			})
 		}
@@ -53,7 +54,7 @@ func describeJsonType(b *strings.Builder, schema []byte, outerFrame bool) {
 	}
 	writeDesc := func() {
 		if desc, dataType, _, _ := json.Get(schema, "description"); dataType == json.String {
-			b.Write(desc)
+			b.Write(renderMarkdown(desc))
 		}
 	}
 
@@ -84,12 +85,12 @@ func describeJsonType(b *strings.Builder, schema []byte, outerFrame bool) {
 func describeObject(b *strings.Builder, props []byte, required map[string]bool) {
 	b.WriteString("<table>")
 	json.ObjectEach(props, func(key []byte, value []byte, _ json.ValueType, _ int) error {
-		b.WriteString("<tr><td>`")
+		b.WriteString("<tr><td><code>")
 		b.WriteString(string(key))
 		if required[string(key)] {
-			b.WriteString("` \\*</td><td>")
+			b.WriteString("</code> *</td><td>")
 		} else {
-			b.WriteString("`</td><td>")
+			b.WriteString("</code></td><td>")
 		}
 		describeJsonType(b, value, false)
 		b.WriteString("</td></tr>")
@@ -110,4 +111,17 @@ func buildRequired(schema []byte) map[string]bool {
 		reqs[string(value)] = true
 	}, "required")
 	return reqs
+}
+
+var (
+	code   = regexp.MustCompile("`(.*?)`")
+	bold   = regexp.MustCompile("__(.*?)__|\\*\\*(.*?)\\*\\*")
+	italic = regexp.MustCompile("_(.*?)_|\\*(.*?)\\*")
+)
+
+func renderMarkdown(text []byte) []byte {
+	text = code.ReplaceAll(text, []byte("<code>$1</code>"))
+	text = bold.ReplaceAll(text, []byte("<strong>$1</strong>"))
+	text = italic.ReplaceAll(text, []byte("<em>$1</em>"))
+	return text
 }
