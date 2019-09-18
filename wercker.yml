@@ -1,16 +1,30 @@
 build:
-  box: golang:1.11
+  box: golang:1.12
   base-path: /go/src/github.com/SharperShape/vanadia
   steps:
     - script:
-      name: install govendor
-      code: go get -u github.com/kardianos/govendor
+      name: Setup
+      code: ./bin/setup.sh
+
     - script:
-      name: install dependencies
-      code: govendor sync
-    - script:
-      name: build
-      code: apt-get update && apt-get install -y make && make
+      name: Copy files for the following pipeline
+      code: cp -r $WERCKER_SOURCE_DIR/* $WERCKER_OUTPUT_DIR
+
+publish:
+  steps:
+    - internal/docker-build:
+        image-name: $WERCKER_GIT_REPOSITORY
+
+    - internal/docker-push:
+        image-name: $WERCKER_GIT_REPOSITORY
+        registry: https://quay.io
+        username: $QUAY_USERNAME
+        password: $QUAY_PASSWORD
+        repository: quay.io/sharpershape/$WERCKER_GIT_REPOSITORY
+        tag: latest,$WERCKER_GIT_BRANCH,$WERCKER_GIT_COMMIT
+        labels:
+          - "PROJECT=$WERCKER_GIT_REPOSITORY"
+          - "COMMIT=$WERCKER_GIT_COMMIT"
 
 release:
   box:
