@@ -16,9 +16,17 @@ $ ./vanadia -h
 
 ### Manual build
 
+Manual build needs python2 so if your python is python3:
+
+```sh
+ $ virtualvenv venv -p python2
+ $ source venv/bin/activate
+```
+
 If you want to be in bleeding edge, you can manually build from `master`:
 
 ```sh
+$ cd ~/go/src/github.com/SharperShape/
 $ git clone https://github.com/SharperShape/vanadia.git
 $ cd vanadia
 $ make
