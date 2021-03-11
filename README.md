@@ -32,7 +32,7 @@ $ cd vanadia
 $ make
 ```
 
-Make sure you have Go 1.9 and build-essentials as we should compile [Drafter](https://github.com/apiaryio/drafter) as one of its dependency.
+Make sure you have Go 1.9 and build-essentials(fedora; dnf install @development-tools) as we should compile [Drafter](https://github.com/apiaryio/drafter) as one of its dependency.
 
 ## Usage
 
