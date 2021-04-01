@@ -4,15 +4,23 @@
 
 A utility to export [API Blueprint](https://github.com/apiaryio/api-blueprint) `.apib` file to a Postman collection.
 
-## Installation
+## Running locally
 
-The latest executables for Linux and OSX are available from the [release page](https://github.com/SharperShape/vanadia/releases), so it can be executed directly:
-
+If you want to test your APIB files locally without installing vanadia on your machine, follow these steps:
 ```sh
-$ wget https://github.com/SharperShape/vanadia/releases/download/${VERSION}/vanadia-${VERSION}.${OS}-amd64.tar.gz
-$ tar -xzf vanadia-${VERSION}.${OS}-amd64.tar.gz
-$ ./vanadia -h
+git clone https://github.com/SharperShape/vanadia.git
+cd vanadia
+docker build .
+docker tag $(docker images -q | head -1) vanadia:latest
 ```
+
+Add this to your `.profile` or `.bashrc`:
+```sh
+alias vanatest='docker run -v "$(pwd)":/data vanadia -input documentation.apib -output TEST.postman_collection.json'
+```
+
+Now you can run `vanatest` in a repository where you want to test your API documentation.
+Load the `TEST.postman_collection.json` file into your Postman desktop app and verify that the endpoints and the documentation is correct.
 
 ### Manual build
 

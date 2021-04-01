@@ -10,5 +10,5 @@ go get -u github.com/kardianos/govendor
 govendor sync
 
 # build
-apt-get update && apt-get install -y make && make
+apt-get update && apt-get install -y make && make clean && make
 
