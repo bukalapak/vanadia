@@ -18,6 +18,11 @@ Add this to your `.profile` or `.bashrc`:
 ```sh
 alias vanatest='docker run -v "$(pwd)":/data vanadia -input documentation.apib -output TEST.postman_collection.json'
 ```
+If you are using fish and podman, run this in the shell
+```sh
+alias -s vanatest='podman run --privileged -v (pwd):/data vanadia -input documentation.apib -output TEST.postman_collection.json'
+```
+
 
 Now you can run `vanatest` in a repository where you want to test your API documentation.
 Load the `TEST.postman_collection.json` file into your Postman desktop app and verify that the endpoints and the documentation is correct.
