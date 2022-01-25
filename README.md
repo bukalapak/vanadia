@@ -10,8 +10,7 @@ If you want to test your APIB files locally without installing vanadia on your m
 ```sh
 git clone https://github.com/SharperShape/vanadia.git
 cd vanadia
-docker build .
-docker tag $(docker images -q | head -1) vanadia:latest
+docker build . -t vanadia:latest
 ```
 
 Add this to your `.profile` or `.bashrc`:
